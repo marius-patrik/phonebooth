@@ -1,0 +1,164 @@
+# Phonebooth Workspace - AI Coding Agent Instructions
+
+## Workspace Architecture
+
+This is a **monorepo workspace** containing two independent applications that work together:
+- **phonebooth/** - React 19 frontend (port 3000)
+- **phoneserver/** - Express.js REST API (port 8080)
+
+Each has its own Git repository, `package.json`, and development workflow. Both auto-start when opening the workspace via VS Code tasks.
+
+## Critical Workflows
+
+**Starting Development:**
+Both servers auto-start via workspace tasks when you open `phonebooth.code-workspace`. If they fail:
+```powershell
+cd phonebooth; npm install
+cd phoneserver; npm install
+```
+
+**Manual Task Execution:**
+- Frontend Dev (Workspace) terminal - `npm run dev` in phonebooth/
+- Backend Dev (Workspace) terminal - `npm run dev` in phoneserver/
+
+**Architecture Decision:**
+- Frontend uses Rsbuild proxy (`/api/*` → `http://localhost:8080`) - no CORS needed
+- Backend uses **in-memory SQLite** (`:memory:`) - all data lost on restart
+- JWT stored in HTTP-only cookies (not Authorization headers)
+
+## Frontend (phonebooth/)
+
+**Tech Stack:** React 19, Rsbuild, Tailwind CSS 4, Wouter (routing), SWR (data fetching)
+
+**Data Fetching Pattern:**
+All API calls use SWR with the shared `fetcher` from `src/api/fetcher.tsx`:
+```tsx
+// GET requests
+const { data, error, isLoading } = useSWR<CallItem[]>("/api/calls", fetcher);
+
+// POST mutations
+await fetcher("/api/call/ring", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ phoneNumber }),
+});
+mutate("/api/calls"); // Refresh SWR cache
+```
+
+**Page Layout Convention:**
+Every page wraps content in `<Body>` from `src/components/page/body.tsx`:
+```tsx
+import Body from "../components/page/body";
+
+const MyPage: react.FC = () => (
+  <Body>
+    {/* Page content - responsive header/footer auto-included */}
+  </Body>
+);
+```
+
+**Component Organization:**
+- `src/pages/*.tsx` - Route components (one per URL)
+- `src/components/page/` - Layout primitives (header, footer, body)
+- `src/components/[feature]/` - Feature-specific UI (call, dial, login, cards)
+- `src/components/display/` - Reusable UI elements (box-field, grid-item, separator)
+- `src/components/input/` - Interactive components (buttons, links)
+- `src/components/text/` - Typography (title, description)
+
+**TypeScript Style:**
+- Import React as lowercase: `import react from "react"`
+- Type components as `react.FC` or `react.FC<PropsWithChildren<Props>>`
+- Default exports for all components
+- Centralized types in `src/api/types.tsx`
+
+**Common Pattern - State-Driven UI:**
+See `src/pages/call.tsx` for example:
+- Use `useState` for UI state (e.g., call state: ringing → active → ended)
+- Use `useEffect` to trigger API calls when state changes
+- Use timers/intervals for real-time updates (call duration)
+
+## Backend (phoneserver/)
+
+**Tech Stack:** Express.js, better-sqlite3 (in-memory), Kysely (query builder), JWT cookies
+
+**Authentication Flow:**
+1. POST `/api/login/email` with `{ email }` → generates 6-digit code
+2. POST `/api/login/code` with `{ code }` → returns JWT in HTTP-only cookie named `jwt`
+3. Extract user ID: `getUserIdFromToken(req.cookies.jwt)` from `src/tokenizer.ts`
+
+**Critical:** `src/authenticator.ts` exists but is **NOT used**. Endpoints manually validate tokens.
+
+**Database Pattern:**
+- Schema: `src/db/index.ts` (Kysely TypeScript interfaces)
+- Migrations: `src/db/migrations/0000-init.ts` (manual, run on startup)
+- Test data inserted via `insertTestData()` in `src/main.ts`
+- Always use Kysely query builder (never raw SQL):
+```typescript
+const user = await db
+  .selectFrom("user")
+  .selectAll()
+  .where("id", "=", userId)
+  .executeTakeFirst();
+```
+
+**Key Tables:**
+- `user` - balance, currency, callerId (phone number), authCode
+- `call` - tracks calls with owner FK, status (init/active/over), pricing
+- `rate` - country calling rates by country code
+- `transaction` - financial history with owner FK
+
+**Endpoint Pattern:**
+1. Create `src/endpoints/<name>.ts` exporting `{ router as <name>Router }`
+2. Import and register in `src/main.ts`: `app.use(<name>Router)`
+3. Extract user: `const userId = getUserIdFromToken(req.cookies.jwt)`
+4. Filter queries by owner: `.where("owner", "=", userId)`
+
+**Module System:**
+- Uses `"type": "module"` in package.json (ES modules)
+- Import with `.js` extensions: `from "../db/index.js"` even for `.ts` files
+- No `tsconfig.json` - tsx handles compilation directly
+
+## Cross-Cutting Concerns
+
+**Formatting:** Biome (not ESLint/Prettier) - auto-formats on save
+```tsx
+/** biome-ignore-all assist/source/organizeImports: <idc> */
+// Use this comment to prevent import reordering when necessary
+```
+
+**Git Workflow:**
+- Each folder (`phonebooth/`, `phoneserver/`) is a separate Git repository
+- Commit/push independently per project
+- Workspace file (`phonebooth.code-workspace`) tracks both repos
+
+**Development Environment:**
+- VS Code workspace configured with Biome formatter
+- Tailwind CSS IntelliSense extension recommended
+- Separate terminal panels for frontend/backend auto-created
+
+## Common Pitfalls
+
+1. **Data Persistence:** Backend database is **ephemeral** - restarting loses all data
+2. **JWT Secret:** Hardcoded as `"your-secure-secret-key"` (not production-ready)
+3. **No Auth Middleware:** Endpoints manually check `req.cookies.jwt`, no centralized auth
+4. **Import Extensions:** Backend requires `.js` extensions in imports despite writing `.ts`
+5. **Proxy Configuration:** Frontend API calls to `/api/*` auto-route to localhost:8080 via Rsbuild
+
+## Adding Features
+
+**New Frontend Page:**
+1. Create `src/pages/<name>.tsx` with `<Body>` wrapper
+2. Add route in `src/index.tsx`: `<Route path="/<name>" component={<Name>Page} />`
+3. Use `useSWR` for data fetching with shared `fetcher`
+
+**New Backend Endpoint:**
+1. Create `src/endpoints/<name>.ts` with Express router
+2. Export as `export { router as <name>Router }`
+3. Import and `app.use()` in `src/main.ts`
+4. Add types to `DatabaseSchema` in `src/db/index.ts` if needed
+
+**New Database Table:**
+1. Add interface to `DatabaseSchema` in `src/db/index.ts`
+2. Create numbered migration in `src/db/migrations/`
+3. Register in `src/db/migrator.ts` getMigrations object
+4. Add test data in `insertTestData()` in `src/main.ts`
