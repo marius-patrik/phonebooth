@@ -1,5 +1,27 @@
 # Phonebooth Workspace - AI Coding Agent Instructions
 
+## 📚 Instruction File Hierarchy
+
+**This workspace uses a three-tier instruction system for AI agents:**
+
+1. **Workspace-level** (this file: `.github/copilot-instructions.md`):
+   - High-level monorepo architecture
+   - Cross-project workflows and data flow
+   - Shared conventions (Git, formatting, development environment)
+
+2. **Project-level** (`phonebooth/.github/copilot-instructions.md` & `phoneserver/.github/copilot-instructions.md`):
+   - Project-specific patterns and conventions
+   - Detailed implementation guidance
+   - Cross-references to sibling project (`../phonebooth/`, `../phoneserver/`)
+   - Type synchronization requirements
+
+3. **How AI agents receive instructions:**
+   - Working at workspace root → This file only
+   - Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
+   - Working in `phoneserver/` → This file + `phoneserver/.github/copilot-instructions.md`
+
+**Why this matters:** AI agents automatically receive context-appropriate instructions based on working directory, ensuring they understand both project-specific details AND cross-project dependencies.
+
 ## Workspace Architecture
 
 This is a **monorepo workspace** containing two tightly coupled applications:
@@ -13,13 +35,6 @@ This is a **monorepo workspace** containing two tightly coupled applications:
 - Understand data flow: Frontend SWR → API endpoint → Kysely query → Database → JSON response
 
 Each has its own Git repository, `package.json`, and development workflow. Both auto-start when opening the workspace via VS Code tasks.
-
-**Project-Specific Instructions:**
-- Each project (`phonebooth/`, `phoneserver/`) has its own `.github/copilot-instructions.md`
-- Those files contain detailed monorepo awareness and cross-project coordination guidance
-- When working in a specific project folder, AI agents receive both workspace-level (this file) and project-level instructions
-- Project-level files include references to sibling projects (`../phonebooth/`, `../phoneserver/`)
-- This ensures agents understand cross-project dependencies regardless of working directory
 
 ## Critical Workflows
 
