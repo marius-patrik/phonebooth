@@ -2,9 +2,15 @@
 
 ## Workspace Architecture
 
-This is a **monorepo workspace** containing two independent applications that work together:
+This is a **monorepo workspace** containing two tightly coupled applications:
 - **phonebooth/** - React 19 frontend (port 3000)
 - **phoneserver/** - Express.js REST API (port 8080)
+
+**Critical for AI Agents:** When making changes, you must understand BOTH codebases simultaneously. Frontend changes often require backend modifications and vice versa. Always:
+- Search across both `phonebooth/` and `phoneserver/` directories when investigating features
+- Verify type compatibility between frontend `src/api/types.tsx` and backend `src/db/index.ts` schemas
+- Test changes in both servers (check task outputs for both terminals)
+- Understand data flow: Frontend SWR → API endpoint → Kysely query → Database → JSON response
 
 Each has its own Git repository, `package.json`, and development workflow. Both auto-start when opening the workspace via VS Code tasks.
 
@@ -20,6 +26,14 @@ cd phoneserver; npm install
 **Manual Task Execution:**
 - Frontend Dev (Workspace) terminal - `npm run dev` in phonebooth/
 - Backend Dev (Workspace) terminal - `npm run dev` in phoneserver/
+
+**Verifying Changes Across Both Platforms:**
+When you make changes, check both terminal outputs:
+```powershell
+# Use get_task_output to verify compilation
+# Frontend: Look for "ready in X ms" and no TypeScript errors
+# Backend: Look for "Server running on port 8080" and no tsx errors
+```
 
 **Architecture Decision:**
 - Frontend uses Rsbuild proxy (`/api/*` → `http://localhost:8080`) - no CORS needed
@@ -146,19 +160,38 @@ const user = await db
 
 ## Adding Features
 
+**Cross-Platform Feature Development:**
+Most features span both frontend and backend. Always implement both sides:
+
+**Example: Adding a new API endpoint with frontend integration:**
+1. **Backend** (`src/endpoints/<name>.ts`):
+   - Create router with endpoint logic
+   - Add to `DatabaseSchema` in `src/db/index.ts` if new table needed
+   - Export as `{ router as <name>Router }` and register in `src/main.ts`
+2. **Frontend** (`src/api/types.tsx`):
+   - Add TypeScript types matching backend response
+   - Create page/component consuming the endpoint with `useSWR`
+3. **Verify**:
+   - Check Backend Dev terminal for successful compilation
+   - Check Frontend Dev terminal for no TypeScript errors
+   - Test API flow in browser (Frontend → Proxy → Backend → Database → Response)
+
 **New Frontend Page:**
 1. Create `src/pages/<name>.tsx` with `<Body>` wrapper
 2. Add route in `src/index.tsx`: `<Route path="/<name>" component={<Name>Page} />`
 3. Use `useSWR` for data fetching with shared `fetcher`
+4. Add types to `src/api/types.tsx` matching backend response shape
 
 **New Backend Endpoint:**
 1. Create `src/endpoints/<name>.ts` with Express router
 2. Export as `export { router as <name>Router }`
 3. Import and `app.use()` in `src/main.ts`
 4. Add types to `DatabaseSchema` in `src/db/index.ts` if needed
+5. Ensure response shape matches frontend type expectations
 
 **New Database Table:**
 1. Add interface to `DatabaseSchema` in `src/db/index.ts`
 2. Create numbered migration in `src/db/migrations/`
 3. Register in `src/db/migrator.ts` getMigrations object
 4. Add test data in `insertTestData()` in `src/main.ts`
+5. Update frontend types in `src/api/types.tsx` if exposed via API
