@@ -1,0 +1,6 @@
+[submodule "phoneserver"]
+	path = phoneserver
+	url = https://github.com/pastiiiiiiik/phoneserver.git
+[submodule "phonebooth"]
+	path = phonebooth
+	url = https://github.com/pastiiiiiiik/phonebooth.git
