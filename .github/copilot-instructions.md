@@ -14,6 +14,13 @@ This is a **monorepo workspace** containing two tightly coupled applications:
 
 Each has its own Git repository, `package.json`, and development workflow. Both auto-start when opening the workspace via VS Code tasks.
 
+**Project-Specific Instructions:**
+- Each project (`phonebooth/`, `phoneserver/`) has its own `.github/copilot-instructions.md`
+- Those files contain detailed monorepo awareness and cross-project coordination guidance
+- When working in a specific project folder, AI agents receive both workspace-level (this file) and project-level instructions
+- Project-level files include references to sibling projects (`../phonebooth/`, `../phoneserver/`)
+- This ensures agents understand cross-project dependencies regardless of working directory
+
 ## Critical Workflows
 
 **Starting Development:**
