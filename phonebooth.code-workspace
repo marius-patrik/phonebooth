@@ -1,6 +1,14 @@
 {
     "folders":  [
                     {
+                        "name":  "Workspace",
+                        "path":  "."
+                    },
+                    {
+                        "name":  "Workspace",
+                        "path":  "."
+                    },
+                    {
                         "name":  "Frontend",
                         "path":  "phonebooth"
                     },
