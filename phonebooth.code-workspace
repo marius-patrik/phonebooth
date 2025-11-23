@@ -15,9 +15,9 @@
 ],
 "settings": {
 "git.enabled": true,
-"git.autoRepositoryDetection": true,
+"git.autoRepositoryDetection": "openEditors",
 "git.detectSubmodules": true,
-"git.openRepositoryInParentFolders": "always",
+"git.scanRepositories": ["."],
 "typescript.tsdk": "phonebooth/node_modules/typescript/lib",
 "typescript.enablePromptUseWorkspaceTsdk": true,
 "editor.formatOnSave": true,
