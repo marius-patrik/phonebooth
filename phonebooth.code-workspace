@@ -1,23 +1,13 @@
 ﻿{
 "folders": [
 {
-"name": "Workspace",
 "path": "."
-},
-{
-"name": "Frontend",
-"path": "phonebooth"
-},
-{
-"name": "Backend",
-"path": "phoneserver"
 }
 ],
 "settings": {
 "git.enabled": true,
-"git.autoRepositoryDetection": "openEditors",
+"git.autoRepositoryDetection": true,
 "git.detectSubmodules": true,
-"git.scanRepositories": ["."],
 "typescript.tsdk": "phonebooth/node_modules/typescript/lib",
 "typescript.enablePromptUseWorkspaceTsdk": true,
 "editor.formatOnSave": true,
@@ -46,7 +36,7 @@
 "type": "shell",
 "command": "npm run dev",
 "options": {
-"cwd": "${workspaceFolder:Frontend}"
+"cwd": "phonebooth"
 },
 "isBackground": true,
 "runOptions": {
@@ -64,7 +54,7 @@
 "type": "shell",
 "command": "npm run dev",
 "options": {
-"cwd": "${workspaceFolder:Backend}"
+"cwd": "phoneserver"
 },
 "isBackground": true,
 "runOptions": {
