@@ -4,14 +4,6 @@
 
 ### Backend (phoneserver/)
 
-#### 🔧 Unused Authenticator Middleware
-**File:** `phoneserver/src/authenticator.ts`
-**Issue:** Authentication middleware exists but is not used anywhere
-**Impact:** Code maintenance burden, confusion
-**TODO:** Either implement middleware across all protected endpoints OR remove file entirely
-**Priority:** Low - cleanup/refactoring
-**Added:** 2025-11-24
-
 #### 🍪 Wait for Cookie After Login
 **File:** `phonebooth/src/pages/login.tsx` or `phonebooth/src/components/login/`
 **Issue:** May not wait for JWT cookie to be set before redirecting
@@ -143,6 +135,18 @@
 - `phoneserver/src/main.ts`
 
 **Note:** Still uses setInterval but much more production-ready. For true production at scale, replace with job queue (Bull, BullMQ, AWS SQS).
+
+#### 🔧 Unused Authenticator Middleware (Low)
+**Solution:** Implemented JWT authentication middleware across all protected endpoints. Updated `authenticateJWT()` to read JWT from cookies and attach user data to `req.user`. Applied middleware globally in `main.ts` after public routes. Removed manual `getUserIdFromToken()` calls from all endpoints.
+**Files Modified:**
+- `phoneserver/src/authenticator.ts` - Updated to use cookies and attach user to request
+- `phoneserver/src/types.ts` - Created Express Request type augmentation
+- `phoneserver/src/main.ts` - Applied middleware to protected routes
+- `phoneserver/src/endpoints/user.ts` - Use req.user.id
+- `phoneserver/src/endpoints/transactions.ts` - Use req.user.id
+- `phoneserver/src/endpoints/calls.ts` - Use req.user.id
+- `phoneserver/src/endpoints/balance.ts` - Use req.user.id
+- `phoneserver/src/endpoints/dial.ts` - Use req.user.id (3 endpoints)
 
 ---
 
