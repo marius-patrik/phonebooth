@@ -22,6 +22,27 @@
 
 **Why this matters:** AI agents automatically receive context-appropriate instructions based on working directory, ensuring they understand both project-specific details AND cross-project dependencies.
 
+## ⚠️ Critical Development Reminders
+
+**BEFORE making any code changes:**
+1. ✅ **Verify your assumptions** - Check if the endpoint/type/component actually exists in both projects
+2. ✅ **Search both directories** - Use `grep_search` or `semantic_search` across `phonebooth/` AND `phoneserver/`
+3. ✅ **Check type compatibility** - Compare `phonebooth/src/api/types.tsx` with `phoneserver/src/db/index.ts`
+4. ✅ **Identify cross-project impact** - Most changes require updates in BOTH projects
+
+**AFTER making changes:**
+1. ✅ **Update both projects** - Frontend changes usually need backend updates and vice versa
+2. ✅ **Verify both terminals** - Check "Frontend Dev" and "Backend Dev" terminal outputs
+3. ✅ **Update types in sync** - If database schema changes, update frontend types immediately
+4. ✅ **Test end-to-end** - Verify data flow: Frontend → Proxy → Backend → Database → Response
+
+**When asked to update these instruction files:**
+- ⚠️ **CRITICAL**: Changes to architecture/patterns affect ALL THREE instruction files
+- Update workspace-level (this file) for cross-project workflows
+- Update `phonebooth/.github/copilot-instructions.md` for frontend-specific impacts
+- Update `phoneserver/.github/copilot-instructions.md` for backend-specific impacts
+- Maintain consistency across all three files regarding shared concepts (Git workflow, type sync, etc.)
+
 ## Workspace Architecture
 
 This is a **monorepo workspace** containing two tightly coupled applications:
