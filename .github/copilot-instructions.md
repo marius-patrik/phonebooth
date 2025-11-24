@@ -14,6 +14,10 @@
    - `phonebooth/.github/copilot-instructions.md` - Frontend-specific patterns
    - `phoneserver/.github/copilot-instructions.md` - Backend-specific patterns
 
+3. **TODO tracking** (`TODO.md` in workspace root):
+   - Centralized list of unfinished features and technical debt
+   - AI agents MUST actively maintain this file (see TODO Management section below)
+
 **How AI agents receive instructions:**
 - Working at workspace root → This file only
 - Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
@@ -260,6 +264,43 @@ const user = await db
 - Tailwind CSS IntelliSense extension recommended
 - Separate terminal panels for frontend/backend auto-created
 
+## TODO List Management
+
+**Location:** `TODO.md` in workspace root
+
+**AI Agent Responsibilities:**
+
+1. **When implementing incomplete/temporary features:**
+   - Add entry to `TODO.md` with file path, line number, description, and priority
+   - Include code snippet showing the TODO area
+   - Set priority: Critical (security/data loss) > High (production-required) > Medium > Low (cleanup)
+
+2. **When encountering TODO comments in code:**
+   - Check if documented in `TODO.md`
+   - If not documented: Alert user and offer to add it
+   - If already fixed: Alert user and suggest removing from both code and `TODO.md`
+
+3. **When user asks to "add to TODO" or "add to todo list":**
+   - Add formatted entry to `TODO.md` under appropriate project section
+   - Include: file path, issue description, impact, TODO details, priority, date
+   - Confirm addition to user
+
+4. **When completing TODO items:**
+   - Move entry from "Known Unfinished Features" to "Completed Items" section
+   - Add completion date
+   - Remove related TODO comments from code
+
+**Examples:**
+```markdown
+#### ⚠️ Feature Name
+**File:** `path/to/file.ts` (line X)
+**Issue:** Brief description
+**Impact:** What this affects
+**TODO:** Specific implementation steps
+**Priority:** High/Medium/Low/Critical
+**Added:** YYYY-MM-DD
+```
+
 ## Common Pitfalls
 
 1. **Data Persistence:** Backend database is **ephemeral** - restarting loses all data
@@ -267,6 +308,8 @@ const user = await db
 3. **No Auth Middleware:** Endpoints manually check `req.cookies.jwt`, no centralized auth
 4. **Import Extensions:** Backend requires `.js` extensions in imports despite writing `.ts`
 5. **Proxy Configuration:** Frontend API calls to `/api/*` auto-route to localhost:8080 via Rsbuild
+
+⚠️ **Note:** Items 2 and 3 are documented in `TODO.md` - check there for detailed remediation plans
 
 ## Available API Endpoints
 
