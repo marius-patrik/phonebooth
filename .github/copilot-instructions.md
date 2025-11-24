@@ -52,6 +52,14 @@
 - Update `phoneserver/.github/copilot-instructions.md` for backend-specific impacts
 - Maintain consistency across all three files regarding shared concepts (Git workflow, type sync, etc.)
 
+**⚠️ CROSS-FILE UPDATE RESPONSIBILITY:**
+When you modify ANY of these files, you MUST alert the user to update related documentation:
+- **Changing instruction files** → Alert to update corresponding README sections
+- **Changing README files** → Alert to update corresponding instruction examples
+- **Adding TODO comments** → MUST update `TODO.md`
+- **Completing TODOs** → MUST update `TODO.md` and remove code comments
+- **Architectural changes** → Update ALL THREE instruction files + relevant READMEs + `TODO.md` if incomplete
+
 ## 🚨 Architectural Change Protocol
 
 **BEFORE making any of these changes, ALERT THE USER to update instruction files:**
@@ -329,6 +337,12 @@ app.use(dialRouter);
 ## TODO List Management
 
 **Location:** `TODO.md` in workspace root
+
+**⚠️ CRITICAL: Always update TODO.md when:**
+- Adding TODO comments to code
+- Implementing temporary/incomplete features
+- Completing existing TODO items
+- Discovering undocumented technical debt
 
 **AI Agent Responsibilities:**
 
