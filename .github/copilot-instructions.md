@@ -201,6 +201,30 @@ const user = await db
 4. **Import Extensions:** Backend requires `.js` extensions in imports despite writing `.ts`
 5. **Proxy Configuration:** Frontend API calls to `/api/*` auto-route to localhost:8080 via Rsbuild
 
+## Available API Endpoints
+
+**Authentication:**
+- `POST /api/login/email` - Send email, generate 6-digit code
+- `POST /api/login/code` - Validate code, set JWT cookie
+- `POST /api/logout` - Clear JWT cookie
+
+**User & Wallet:**
+- `GET /api/user` - Get current user info (balance, email, callerId)
+- `GET /api/balance` - Get current user's balance
+- `POST /api/balance` - Add funds to balance
+
+**Calling:**
+- `GET /api/rates` - Get all country calling rates
+- `GET /api/calls` - Get user's call history
+- `POST /api/call/ring` - Initiate a call (ring state)
+- `POST /api/call/pickup` - Answer a call (active state)
+- `POST /api/call/hangup` - End a call (over state)
+
+**Transactions:**
+- `GET /api/transactions` - Get user's transaction history
+
+**Key pattern:** Most endpoints require JWT in `req.cookies.jwt` and filter data by `owner` (user ID).
+
 ## Adding Features
 
 **Cross-Platform Feature Development:**
