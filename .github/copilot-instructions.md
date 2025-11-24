@@ -283,9 +283,9 @@ const user = await db
 **Calling:**
 - `GET /api/rates` - Get all country calling rates
 - `GET /api/calls` - Get user's call history
-- `POST /api/call/ring` - Initiate a call (ring state)
-- `POST /api/call/pickup` - Answer a call (active state)
-- `POST /api/call/hangup` - End a call (over state)
+- `POST /api/call/ring` - Initiate a call (ring/init state)
+- `POST /api/call/connect` - Answer/connect a call (active state)
+- `POST /api/call/hang` - End a call (over state)
 
 **Transactions:**
 - `GET /api/transactions` - Get user's transaction history
