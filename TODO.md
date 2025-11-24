@@ -4,63 +4,12 @@
 
 ### Backend (phoneserver/)
 
-#### ⚠️ Critical - Hardcoded Billing Rate
-**File:** `phoneserver/src/endpoints/dial.ts` (line 9)
-**Issue:** Billing uses hardcoded rate of `0.01` per minute instead of querying the `rate` table by country code
-**Impact:** All calls charged at same rate regardless of destination country
-**TODO:** 
-```typescript
-// Current (line 9):
-const rate = 0.01; // Define the rate per minute for billing
-
-// Should be:
-// Extract country code from phone number
-// Query rate table: SELECT price FROM rate WHERE code = countryCode
-// Use retrieved price for billing calculations
-```
-**Priority:** High - affects billing accuracy
-**Added:** 2025-11-24
-
-#### ⚠️ In-Memory Billing Timer
-**File:** `phoneserver/src/endpoints/dial.ts` (lines 176-201)
-**Issue:** Call billing uses `setInterval` in-memory, not production-ready
-**Impact:** Timer lost on server restart, doesn't scale across multiple instances
-**TODO:** Replace with proper job queue (Bull, BullMQ, or external service like AWS SQS)
-**Priority:** High - required for production deployment
-**Added:** 2025-11-24
-
-#### 🔐 Hardcoded JWT Secret
-**Files:** 
-- `phoneserver/src/endpoints/login.ts` (line 8)
-- `phoneserver/src/authenticator.ts`
-**Issue:** JWT secret is `"your-secure-secret-key"` hardcoded string
-**Impact:** Security vulnerability
-**TODO:** Move to environment variable or secret management service
-**Priority:** Critical - must fix before production
-**Added:** 2025-11-24
-
 #### 🔧 Unused Authenticator Middleware
 **File:** `phoneserver/src/authenticator.ts`
 **Issue:** Authentication middleware exists but is not used anywhere
 **Impact:** Code maintenance burden, confusion
 **TODO:** Either implement middleware across all protected endpoints OR remove file entirely
 **Priority:** Low - cleanup/refactoring
-**Added:** 2025-11-24
-
-#### 💾 Ephemeral Database
-**File:** `phoneserver/src/db/index.ts` (line 48)
-**Issue:** Database uses `:memory:` mode - all data lost on restart
-**Impact:** Cannot persist data between restarts
-**TODO:** Add configuration for persistent SQLite file or migrate to PostgreSQL/MySQL for production
-**Priority:** High - required for production deployment
-**Added:** 2025-11-24
-
-#### 🔑 Auth Code Expiration and Cleanup
-**File:** `phoneserver/src/endpoints/login.ts`
-**Issue:** Auth codes stored indefinitely in user table, no expiration or cleanup
-**Impact:** Security risk - old codes remain valid, database clutter
-**TODO:** Add expiration timestamp to auth codes, implement cleanup job to delete expired codes
-**Priority:** High - security concern
 **Added:** 2025-11-24
 
 #### 🍪 Wait for Cookie After Login
@@ -149,7 +98,51 @@ const rate = 0.01; // Define the rate per minute for billing
 
 ## ✅ Completed Items
 
-*(Completed TODOs will be moved here with completion date)*
+### 2025-11-24
+
+#### 🔐 Hardcoded JWT Secret (Critical)
+**Solution:** Created `phoneserver/src/config.ts` to load JWT secret from `.env` file. Updated all files using JWT to import from config. Added `.env.example` template and updated `.gitignore`.
+**Files Modified:** 
+- `phoneserver/src/config.ts` (created)
+- `phoneserver/.env` (created)
+- `phoneserver/.env.example` (created)
+- `phoneserver/src/endpoints/login.ts`
+- `phoneserver/src/authenticator.ts`
+- `phoneserver/.gitignore`
+
+#### ⚠️ Hardcoded Billing Rate (High)
+**Solution:** Implemented country code extraction from phone numbers and database lookup in `rate` table. Created `getRateForNumber()` and `getCountryCode()` functions. Updated `endCall()` to accept callee number and dynamically fetch rates.
+**Files Modified:**
+- `phoneserver/src/endpoints/dial.ts`
+
+#### 🔑 Auth Code Expiration (High)
+**Solution:** Added `authCodeExpires` field to user table with 15-minute TTL. Login endpoint now sets expiration timestamp and validates it, clearing expired codes automatically.
+**Files Modified:**
+- `phoneserver/src/db/index.ts` (schema update)
+- `phoneserver/src/db/migrations/0001-add-auth-code-expiration.ts` (created)
+- `phoneserver/src/db/migrator.ts`
+- `phoneserver/src/endpoints/login.ts`
+
+#### 💾 Ephemeral Database (High)
+**Solution:** Added `DATABASE_PATH` environment variable to config. Database now reads from `.env` and supports both `:memory:` (dev) and file-based persistence (production). Logs warning when using in-memory mode.
+**Files Modified:**
+- `phoneserver/src/config.ts`
+- `phoneserver/src/db/index.ts`
+- `phoneserver/.env`
+- `phoneserver/.env.example`
+- `phoneserver/.gitignore` (added `*.db` exclusion)
+
+#### ⚠️ In-Memory Billing Timer (High)
+**Solution:** Created centralized `billing-manager.ts` with global interval that monitors all active calls. Added `lastBillingCheck` field to call table for persistence. Manager auto-starts on server launch and resumes monitoring active calls from previous session. Removed per-call `setInterval` from dial endpoint.
+**Files Modified:**
+- `phoneserver/src/billing-manager.ts` (created)
+- `phoneserver/src/db/index.ts` (schema update)
+- `phoneserver/src/db/migrations/0002-add-billing-check-timestamp.ts` (created)
+- `phoneserver/src/db/migrator.ts`
+- `phoneserver/src/endpoints/dial.ts`
+- `phoneserver/src/main.ts`
+
+**Note:** Still uses setInterval but much more production-ready. For true production at scale, replace with job queue (Bull, BullMQ, AWS SQS).
 
 ---
 

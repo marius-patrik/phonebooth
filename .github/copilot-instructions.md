@@ -33,6 +33,14 @@
 
 ## ⚠️ Critical Development Reminders
 
+**Problem-First Workflow:**
+- ⚠️ **CRITICAL**: When tackling ANY problem or request, FIRST prompt the user with:
+  1. Your understanding of the problem
+  2. Your proposed solution/action plan
+  3. Wait for user confirmation before implementing
+- This applies to bug fixes, feature requests, refactoring, and architectural changes
+- Only skip confirmation for trivial tasks (simple reads, formatting, typo fixes)
+
 **BEFORE making any code changes:**
 1. ✅ **Verify your assumptions** - Check if the endpoint/type/component actually exists in both projects
 2. ✅ **Search both directories** - Use `grep_search` or `semantic_search` across `phonebooth/` AND `phoneserver/`
