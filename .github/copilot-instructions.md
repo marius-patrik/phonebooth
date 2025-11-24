@@ -196,9 +196,9 @@ mutate("/api/calls"); // Refresh SWR cache
 ```
 
 **Page Layout Convention:**
-Every page wraps content in `<Body>` from `src/components/page/body.tsx`:
+Every page wraps content in `<Body>` from `src/components/body/body.tsx`:
 ```tsx
-import Body from "../components/page/body";
+import Body from "../components/body/body";
 
 const MyPage: react.FC = () => (
   <Body>
@@ -208,12 +208,13 @@ const MyPage: react.FC = () => (
 ```
 
 **Component Organization:**
-- `src/pages/*.tsx` - Route components (one per URL)
-- `src/components/page/` - Layout primitives (header, footer, body)
-- `src/components/[feature]/` - Feature-specific UI (call, dial, login, cards)
+- `src/components/*.tsx` - Most route/page components (contacts, history, rates, transactions, etc.)
+- `src/pages/call.tsx` - Only one page component in pages/ (call interface)
+- `src/components/body/` - Layout primitives (header, footer, body)
+- `src/components/[feature]/` - Feature-specific UI (call, dial, user, cards)
 - `src/components/display/` - Reusable UI elements (box-field, grid-item, separator)
-- `src/components/input/` - Interactive components (buttons, links)
-- `src/components/text/` - Typography (title, description)
+- `src/components/display/input/` - Interactive components (buttons, links)
+- `src/components/display/text/` - Typography (title, description)
 
 **TypeScript Style:**
 - Import React as lowercase: `import react from "react"`
@@ -417,6 +418,11 @@ app.use(dialRouter);
 **Transactions:**
 - `GET /api/transactions` - Get user's transaction history
 
+**Contacts:**
+- `GET /api/contacts` - Get user's contact list
+- `POST /api/contacts` - Add new contact with `{ name, phoneNumber }`
+- `DELETE /api/contacts/:id` - Delete contact by ID
+
 **Key pattern:** Most endpoints require JWT in `req.cookies.jwt` and filter data by `owner` (user ID).
 
 ## Adding Features
@@ -438,7 +444,7 @@ Most features span both frontend and backend. Always implement both sides:
    - Test API flow in browser (Frontend → Proxy → Backend → Database → Response)
 
 **New Frontend Page:**
-1. Create `src/pages/<name>.tsx` with `<Body>` wrapper
+1. Create `src/components/<name>-page.tsx` with `<Body>` wrapper (or `src/pages/<name>.tsx` for complex pages)
 2. Add route in `src/index.tsx`: `<Route path="/<name>" component={<Name>Page} />`
 3. Use `useSWR` for data fetching with shared `fetcher`
 4. Add types to `src/api/types.tsx` matching backend response shape
