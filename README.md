@@ -12,24 +12,42 @@ Both projects auto-start when you open the workspace, with hot-reloading enabled
 
 ## Quick Setup
 
+### Automated Setup (Recommended)
+
+**Windows (PowerShell):**
+```powershell
+git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
+cd phonebooth-workspace
+.\setup-workspace.ps1
+code phonebooth.code-workspace
+```
+
+**macOS/Linux (Bash):**
+```bash
+git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
+cd phonebooth-workspace
+chmod +x setup-workspace.sh
+./setup-workspace.sh
+code phonebooth.code-workspace
+```
+
+### Manual Setup
+
 1. **Clone the workspace with submodules:**
-   ```powershell
-   git clone https://github.com/pastiiiiiiik/phonebooth-workspace.git
+   ```bash
+   git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
    cd phonebooth-workspace
-   git submodule update --init --recursive
    ```
 
-2. **Open in VS Code:**
-   ```powershell
+2. **Install dependencies:**
+   ```bash
+   cd phonebooth && npm install && cd ..
+   cd phoneserver && npm install && cd ..
+   ```
+
+3. **Open workspace:**
+   ```bash
    code phonebooth.code-workspace
-   ```
-
-3. **Install dependencies** (if auto-start fails):
-   ```powershell
-   cd phonebooth
-   npm install
-   cd ../phoneserver
-   npm install
    ```
 
 Both dev servers start automatically when the workspace opens.

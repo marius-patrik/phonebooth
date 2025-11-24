@@ -67,20 +67,24 @@ This document describes the **multi-project, multi-agent documentation and workf
 **Pattern:** Each project folder is a **separate Git repository**
 
 ```
-phonebooth-workspace/           # Not a Git repo - just a VS Code workspace
+phonebooth-workspace/           # Main Git repo (workspace files)
+├── .git/                       # Workspace repo
+├── .gitmodules                 # Submodule configuration (if using submodules)
 ├── .github/
 │   └── copilot-instructions.md # Workspace-level agent instructions
 ├── README.md                   # Workspace overview
 ├── TODO.md                     # Centralized TODO tracking
 ├── AGENT_SYSTEM.md             # This file - system documentation
+├── setup-workspace.ps1         # Windows setup script
+├── setup-workspace.sh          # macOS/Linux setup script
 ├── phonebooth-workspace.code-workspace  # VS Code workspace config
-├── phonebooth/                 # Separate Git repository #1
+├── phonebooth/                 # Separate Git repository OR submodule
 │   ├── .git/
 │   ├── .github/
 │   │   └── copilot-instructions.md
 │   ├── README.md
 │   └── package.json
-└── phoneserver/                # Separate Git repository #2
+└── phoneserver/                # Separate Git repository OR submodule
     ├── .git/
     ├── .github/
     │   └── copilot-instructions.md
@@ -88,13 +92,54 @@ phonebooth-workspace/           # Not a Git repo - just a VS Code workspace
     └── package.json
 ```
 
+**Two Approaches:**
+
+**A. Git Submodules (Recommended for single-person or small teams):**
+- Workspace repo contains submodule references to project repos
+- One `git clone --recurse-submodules` gets everything
+- Projects can still be developed independently
+
+```bash
+# Setup on main machine
+cd phonebooth-workspace
+git submodule add <phonebooth-url> phonebooth
+git submodule add <phoneserver-url> phoneserver
+git commit -m "Add submodules"
+git push
+
+# Clone on new machine
+git clone --recurse-submodules <workspace-url>
+cd phonebooth-workspace
+# All projects are cloned automatically
+
+# OR use setup script
+./setup-workspace.sh
+```
+
+**B. Separate Repos (Better for teams or complex workflows):**
+- Each repo is completely independent
+- Clone each repo manually into workspace folder
+- More flexible for different access controls
+
+```bash
+# Setup on new machine
+git clone <workspace-docs-url> phonebooth-workspace
+cd phonebooth-workspace
+git clone <phonebooth-url> phonebooth
+git clone <phoneserver-url> phoneserver
+
+# OR use setup script
+./setup-workspace.sh
+```
+
 **Why Multiple Repos:**
 - Independent version control per project
 - Separate commit histories
 - Can deploy/release independently
 - Different teams can own different repos
+- Projects can be used in other workspaces
 
-**Coordination:** Workspace-level documentation coordinates changes across repos
+**Coordination:** Workspace-level documentation (README.md, AGENT_SYSTEM.md, TODO.md) coordinates changes across repos
 
 ### 3. **Node.js Structure** (Independent Package Management)
 
@@ -379,7 +424,33 @@ my-workspace/
 ```
 
 ### Step 2: Initialize Git Repositories
+
+**Option A: Using Git Submodules**
 ```powershell
+# In workspace root
+git init
+git add .
+git commit -m "Initial workspace setup"
+
+# Add project repos as submodules
+cd project1; git init; git add .; git commit -m "Initial commit"; cd ..
+cd project2; git init; git add .; git commit -m "Initial commit"; cd ..
+
+# Create remotes for projects (on GitHub/GitLab)
+# Then add as submodules
+git submodule add <project1-remote-url> project1
+git submodule add <project2-remote-url> project2
+git commit -m "Add project submodules"
+```
+
+**Option B: Separate Repos**
+```powershell
+# In workspace root (optional - for coordination files only)
+git init
+git add README.md TODO.md AGENT_SYSTEM.md .github/ *.code-workspace setup-*
+git commit -m "Workspace coordination files"
+
+# Each project independently
 cd project1; git init; git add .; git commit -m "Initial commit"
 cd project2; git init; git add .; git commit -m "Initial commit"
 ```
