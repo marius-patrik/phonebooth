@@ -51,12 +51,14 @@
    - Changing primary keys, foreign keys, or constraints
    - Modifying data types or nullable fields
    - Impact: Update `DatabaseSchema` docs in backend instructions + frontend type sync
+   - **README impact:** `phoneserver/README.md` - Database Schema section
 
 2. **API contract changes:**
    - Adding/removing/renaming endpoints
    - Changing request/response payload structure
    - Modifying authentication mechanism (JWT → OAuth, etc.)
    - Impact: Update endpoint lists in all three instruction files + README files
+   - **README impact:** `README.md` - Available API Endpoints, `phonebooth/README.md` - API Integration section, `phoneserver/README.md` - API Endpoints section
 
 3. **Build/deployment changes:**
    - Switching build tools (Rsbuild → Vite, etc.)
@@ -64,24 +66,28 @@
    - Modifying proxy configuration
    - Adding/removing workspace tasks
    - Impact: Update workspace instructions + README setup sections
+   - **README impact:** `README.md` - Quick Setup, Development, Architecture sections, `phonebooth/README.md` - Tech Stack, Development sections
 
 4. **Framework/library changes:**
    - Replacing core dependencies (SWR → React Query, Kysely → Drizzle, etc.)
    - Changing routing libraries (Wouter → React Router)
    - Switching styling solutions (Tailwind → CSS Modules)
    - Impact: Update tech stack in README + pattern examples in instructions
+   - **README impact:** `README.md` - Tech Stack section, `phonebooth/README.md` - Tech Stack, Key Patterns sections, `phoneserver/README.md` - Tech Stack section
 
 5. **Authentication/security changes:**
    - Modifying JWT storage (cookies → headers)
    - Changing auth flow (email+code → OAuth)
    - Adding/removing middleware
    - Impact: Update auth patterns in all instruction files
+   - **README impact:** `phonebooth/README.md` - API Integration section, `phoneserver/README.md` - Authentication Pattern section
 
 6. **Monorepo structure changes:**
    - Adding/removing projects
    - Changing folder structure
    - Modifying Git repository setup
    - Impact: Update all instruction files + workspace README
+   - **README impact:** `README.md` - Architecture, Project Structure sections
 
 **Warning message template:**
 ```
@@ -90,7 +96,13 @@
 The change you requested modifies [specific aspect].
 
 Please update the following documentation after this change:
+
+README files:
 - [ ] README.md - [specific section]
+- [ ] phonebooth/README.md - [specific section]
+- [ ] phoneserver/README.md - [specific section]
+
+Instruction files:
 - [ ] .github/copilot-instructions.md - [specific section]
 - [ ] phonebooth/.github/copilot-instructions.md - [specific section]
 - [ ] phoneserver/.github/copilot-instructions.md - [specific section]
