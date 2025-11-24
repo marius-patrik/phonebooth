@@ -18,6 +18,17 @@
    - Centralized list of unfinished features and technical debt
    - AI agents MUST actively maintain this file (see TODO Management section below)
 
+4. **System architecture** (`AGENT_SYSTEM.md` in workspace root):
+   - Meta-documentation explaining how this documentation system works
+   - AI agent behavior specifications and workflows
+   - System replication guide for creating similar setups in other projects
+   - **IMPORTANT:** Read this file to understand your role as an AI agent in maintaining this system
+
+**How AI agents receive instructions:**
+- Working at workspace root → This file only
+- Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
+- Working in `phoneserver/` → This file + `phoneserver/.github/copilot-instructions.md`
+
 **How AI agents receive instructions:**
 - Working at workspace root → This file only
 - Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
