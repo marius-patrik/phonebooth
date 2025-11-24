@@ -4,31 +4,7 @@
 
 ### Backend (phoneserver/)
 
-#### 🍪 Wait for Cookie After Login
-**File:** `phonebooth/src/pages/login.tsx` or `phonebooth/src/components/login/`
-**Issue:** May not wait for JWT cookie to be set before redirecting
-**Impact:** Race condition - user redirected before authentication complete
-**TODO:** Ensure cookie is set and verified before navigation after login
-**Priority:** Medium
-**Added:** 2025-11-24
-
-#### 🏠 Index Page - Show Login Component if User Not Logged In
-**File:** `phonebooth/src/pages/index.tsx`
-**Issue:** Index page doesn't check auth state to conditionally show login
-**Impact:** UX - users must navigate to separate login page
-**TODO:** Add auth check to index page, show login component if no JWT cookie present
-**Priority:** Low - UX improvement
-**Added:** 2025-11-24
-
 ### Frontend (phonebooth/)
-
-#### 💰 Display Full Price and Balance
-**File:** Various components (wallet, call pages)
-**Issue:** Price and balance information not displayed in full detail
-**Impact:** Users cannot see complete financial information
-**TODO:** Add comprehensive price/balance display across relevant UI components
-**Priority:** Medium
-**Added:** 2025-11-24
 
 #### 📞 Routing Number Selector
 **File:** Dial/call interface
@@ -78,19 +54,28 @@
 **Priority:** Low
 **Added:** 2025-11-24
 
-#### ⚠️ Handle Call Canceled During Connecting
-**File:** Call state management (`src/pages/call.tsx`)
-**Issue:** No handling for call cancellation during connection phase
-**Impact:** Possible UI stuck state or error
-**TODO:** Add cancellation handling in "connecting" state transition
-**Priority:** Medium
-**Added:** 2025-11-24
-
 ---
 
 ## ✅ Completed Items
 
 ### 2025-11-24
+
+#### 🍪 Wait for Cookie After Login
+**Solution:** Implemented fire-and-forget auth code clearing after response is sent. JWT cookie is set via `res.cookie()` before response, then auth code is cleared asynchronously without blocking. This ensures user is authenticated before navigation.
+**Files Modified:**
+- `phoneserver/src/endpoints/login.ts` - Moved auth code clearing after response with `.catch()` handler
+
+#### 💰 Display Full Price and Balance
+**Solution:** Balance and price information now displayed throughout the app. User page shows balance with currency, history shows call costs, post-call stats show detailed pricing breakdown (duration, rate, total cost).
+**Files Modified:**
+- `phonebooth/src/pages/user.tsx` - Displays balance with currency
+- `phonebooth/src/components/cards/history-card.tsx` - Shows call costs
+- `phonebooth/src/components/call/call-over.tsx` - Post-call statistics with full pricing
+
+#### ⚠️ Handle Call Canceled During Connecting
+**Solution:** Added `connectTimeoutRef` to track pending connection timeout. Cleanup function in useEffect clears timeout on unmount. `endCall()` now cancels pending connection if called during ringing state, preventing race condition where setTimeout would still execute after cancellation.
+**Files Modified:**
+- `phonebooth/src/pages/call.tsx` - Added timeout ref, cleanup, and cancellation handling
 
 #### 🔐 Hardcoded JWT Secret (Critical)
 **Solution:** Created `phoneserver/src/config.ts` to load JWT secret from `.env` file. Updated all files using JWT to import from config. Added `.env.example` template and updated `.gitignore`.
