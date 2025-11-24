@@ -1,26 +1,25 @@
 # Phonebooth Workspace - AI Coding Agent Instructions
 
-## 📚 Instruction File Hierarchy
+## 📚 Documentation Hierarchy
 
-**This workspace uses a three-tier instruction system for AI agents:**
+**This workspace has multiple documentation sources:**
 
-1. **Workspace-level** (this file: `.github/copilot-instructions.md`):
-   - High-level monorepo architecture
-   - Cross-project workflows and data flow
-   - Shared conventions (Git, formatting, development environment)
+1. **README files** (quick reference for developers):
+   - `README.md` - Workspace overview, setup, architecture
+   - `phonebooth/README.md` - Frontend tech stack, API integration, patterns
+   - `phoneserver/README.md` - Backend API endpoints, database schema, query patterns
 
-2. **Project-level** (`phonebooth/.github/copilot-instructions.md` & `phoneserver/.github/copilot-instructions.md`):
-   - Project-specific patterns and conventions
-   - Detailed implementation guidance
-   - Cross-references to sibling project (`../phonebooth/`, `../phoneserver/`)
-   - Type synchronization requirements
+2. **Instruction files** (detailed AI agent guidance):
+   - This file - High-level monorepo architecture and workflows
+   - `phonebooth/.github/copilot-instructions.md` - Frontend-specific patterns
+   - `phoneserver/.github/copilot-instructions.md` - Backend-specific patterns
 
-3. **How AI agents receive instructions:**
-   - Working at workspace root → This file only
-   - Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
-   - Working in `phoneserver/` → This file + `phoneserver/.github/copilot-instructions.md`
+**How AI agents receive instructions:**
+- Working at workspace root → This file only
+- Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
+- Working in `phoneserver/` → This file + `phoneserver/.github/copilot-instructions.md`
 
-**Why this matters:** AI agents automatically receive context-appropriate instructions based on working directory, ensuring they understand both project-specific details AND cross-project dependencies.
+**Quick reference:** For setup, tech stack overview, and API documentation, check the README files. For implementation patterns and workflows, use these instruction files.
 
 ## ⚠️ Critical Development Reminders
 
@@ -42,6 +41,62 @@
 - Update `phonebooth/.github/copilot-instructions.md` for frontend-specific impacts
 - Update `phoneserver/.github/copilot-instructions.md` for backend-specific impacts
 - Maintain consistency across all three files regarding shared concepts (Git workflow, type sync, etc.)
+
+## 🚨 Architectural Change Protocol
+
+**BEFORE making any of these changes, ALERT THE USER to update instruction files:**
+
+1. **Database schema changes:**
+   - Adding/removing/renaming tables or columns
+   - Changing primary keys, foreign keys, or constraints
+   - Modifying data types or nullable fields
+   - Impact: Update `DatabaseSchema` docs in backend instructions + frontend type sync
+
+2. **API contract changes:**
+   - Adding/removing/renaming endpoints
+   - Changing request/response payload structure
+   - Modifying authentication mechanism (JWT → OAuth, etc.)
+   - Impact: Update endpoint lists in all three instruction files + README files
+
+3. **Build/deployment changes:**
+   - Switching build tools (Rsbuild → Vite, etc.)
+   - Changing dev server ports
+   - Modifying proxy configuration
+   - Adding/removing workspace tasks
+   - Impact: Update workspace instructions + README setup sections
+
+4. **Framework/library changes:**
+   - Replacing core dependencies (SWR → React Query, Kysely → Drizzle, etc.)
+   - Changing routing libraries (Wouter → React Router)
+   - Switching styling solutions (Tailwind → CSS Modules)
+   - Impact: Update tech stack in README + pattern examples in instructions
+
+5. **Authentication/security changes:**
+   - Modifying JWT storage (cookies → headers)
+   - Changing auth flow (email+code → OAuth)
+   - Adding/removing middleware
+   - Impact: Update auth patterns in all instruction files
+
+6. **Monorepo structure changes:**
+   - Adding/removing projects
+   - Changing folder structure
+   - Modifying Git repository setup
+   - Impact: Update all instruction files + workspace README
+
+**Warning message template:**
+```
+⚠️ ARCHITECTURAL CHANGE DETECTED
+
+The change you requested modifies [specific aspect].
+
+Please update the following documentation after this change:
+- [ ] README.md - [specific section]
+- [ ] .github/copilot-instructions.md - [specific section]
+- [ ] phonebooth/.github/copilot-instructions.md - [specific section]
+- [ ] phoneserver/.github/copilot-instructions.md - [specific section]
+
+Proceed with implementation? (Please confirm)
+```
 
 ## Workspace Architecture
 
