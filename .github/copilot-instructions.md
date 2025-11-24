@@ -29,11 +29,6 @@
 - Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
 - Working in `phoneserver/` → This file + `phoneserver/.github/copilot-instructions.md`
 
-**How AI agents receive instructions:**
-- Working at workspace root → This file only
-- Working in `phonebooth/` → This file + `phonebooth/.github/copilot-instructions.md`
-- Working in `phoneserver/` → This file + `phoneserver/.github/copilot-instructions.md`
-
 **Quick reference:** For setup, tech stack overview, and API documentation, check the README files. For implementation patterns and workflows, use these instruction files.
 
 ## ⚠️ Critical Development Reminders
@@ -211,10 +206,32 @@ const MyPage: react.FC = () => (
 - Centralized types in `src/api/types.tsx`
 
 **Common Pattern - State-Driven UI:**
-See `src/pages/call.tsx` for example:
-- Use `useState` for UI state (e.g., call state: ringing → active → ended)
-- Use `useEffect` to trigger API calls when state changes
-- Use timers/intervals for real-time updates (call duration)
+See `phonebooth/src/pages/call.tsx` for real implementation:
+```tsx
+// State machine approach for call lifecycle
+const [callState, setCallState] = useState<"ringing" | "active" | "ended">("ringing");
+const [callId, setCallId] = useState<number | null>(null);
+
+// Effect 1: Initiate call on mount
+useEffect(() => {
+  fetcher("/api/call/ring", { method: "POST", ... })
+    .then(res => {
+      setCallId(res.callId);
+      setTimeout(() => setCallState("active"), 2000); // Transition to active
+    });
+}, []);
+
+// Effect 2: Start timer when state changes to "active"
+useEffect(() => {
+  if (callState !== "active") return;
+  const timer = setInterval(() => setTime(v => v + 1), 1000);
+  return () => clearInterval(timer); // Cleanup on unmount or state change
+}, [callState]);
+```
+**Key principles:**
+- UI renders different components based on state (ringing → `RingComp`, active → `CallActive`, ended → `PostCallComp`)
+- API calls triggered by state transitions via `useEffect`
+- Timers/intervals tied to specific states and cleaned up properly
 
 ## Backend (phoneserver/)
 
@@ -247,10 +264,44 @@ const user = await db
 - `transaction` - financial history with owner FK
 
 **Endpoint Pattern:**
-1. Create `src/endpoints/<name>.ts` exporting `{ router as <name>Router }`
-2. Import and register in `src/main.ts`: `app.use(<name>Router)`
-3. Extract user: `const userId = getUserIdFromToken(req.cookies.jwt)`
-4. Filter queries by owner: `.where("owner", "=", userId)`
+See `phoneserver/src/endpoints/dial.ts` for complete example:
+```typescript
+// 1. Create src/endpoints/<name>.ts
+import express from "express";
+import { getUserIdFromToken } from "../tokenizer.js";
+const router = express.Router();
+const { db } = await import("../db/index.js");
+
+// 2. Define endpoint with JWT extraction
+router.post("/api/call/hang", async (req, res) => {
+  try {
+    const userId = getUserIdFromToken(req.cookies.jwt);
+    const { callId } = req.body;
+    
+    // 3. Filter by owner column
+    const call = await db
+      .selectFrom("call")
+      .selectAll()
+      .where("id", "=", callId)
+      .where("owner", "=", userId)  // Critical: user isolation
+      .executeTakeFirst();
+    
+    // Business logic...
+    res.json({ durationSeconds, cost });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// 4. Export as named router
+export { router as dialRouter };
+```
+
+**Then in `src/main.ts`:**
+```typescript
+import { dialRouter } from "./endpoints/dial.js";
+app.use(dialRouter);
+```
 
 **Module System:**
 - Uses `"type": "module"` in package.json (ES modules)
