@@ -12,40 +12,6 @@
 **Priority:** High (production readiness)
 **Added:** 2025-11-25
 
-#### 📞 Integrate Telephony Provider
-**File:** `src/endpoints/dial.ts` (line 161)
-**Issue:** Call initiation is a stub; does not connect to any real telephony service
-**Impact:** No actual phone calls can be made; feature incomplete
-**TODO:** Integrate with a real telephony provider (e.g., Twilio, Plivo) to initiate outbound calls
-**Priority:** High (core feature)
-**Added:** 2025-11-25
-
-### Frontend (phonebooth/)
-
-#### 🔔 Add Ring Sound
-**File:** Call interface components
-**Issue:** No audio feedback when call is ringing
-**Impact:** Poor UX - users don't hear ringing
-**TODO:** Add audio element with ring sound on call init state
-**Priority:** Medium
-**Added:** 2025-11-24
-
-#### 💳 Connect Stripe
-**File:** Payment/wallet integration
-**Issue:** No payment gateway integration
-**Impact:** Cannot process real payments
-**TODO:** Integrate Stripe API for payment processing
-**Priority:** High - required for production
-**Added:** 2025-11-24
-
-#### 📦 Alert Box Component
-**File:** Component library
-**Issue:** No reusable alert/notification component
-**Impact:** Inconsistent error/success messaging
-**TODO:** Create standardized alert box component in `src/components/display/`
-**Priority:** Medium
-**Added:** 2025-11-24
-
 ---
 
 ## ✅ Completed Items
