@@ -162,6 +162,9 @@ See individual project README files for detailed API documentation:
 - [Frontend README](phonebooth/README.md)
 - [Backend README](phoneserver/README.md)
 
+### Authentication Code Expiry
+The backend login endpoint now uses the `authCodeCreated` timestamp to enforce a 15-minute expiry window for authentication codes. Codes are not cleared after use; instead, expiry is checked on login. See backend README for details.
+
 ## Troubleshooting
 
 **Servers won't start:**

@@ -78,6 +78,7 @@ When you modify ANY of these files, you MUST alert the user to update related do
    - Modifying data types or nullable fields
    - Impact: Update `DatabaseSchema` docs in backend instructions + frontend type sync
    - **README impact:** `phoneserver/README.md` - Database Schema section
+   - **Authentication code expiry:** If the user table changes for authentication code expiry (e.g., adding `authCodeCreated`), update all documentation and instructions to reflect expiry logic and removal of code clearing.
 
 2. **API contract changes:**
    - Adding/removing/renaming endpoints
@@ -255,8 +256,8 @@ useEffect(() => {
 **Tech Stack:** Express.js, better-sqlite3 (in-memory), Kysely (query builder), JWT cookies
 
 **Authentication Flow:**
-1. POST `/api/login/email` with `{ email }` → generates 6-digit code
-2. POST `/api/login/code` with `{ code }` → returns JWT in HTTP-only cookie named `jwt`
+1. POST `/api/login/email` with `{ email }` → generates 6-digit code, sets `authCodeCreated` to current time (code valid for 15 minutes)
+2. POST `/api/login/code` with `{ code }` → checks code and expiry (15 min window), returns JWT in HTTP-only cookie named `jwt` (code is not cleared)
 3. Extract user ID: `getUserIdFromToken(req.cookies.jwt)` from `src/tokenizer.ts`
 
 **Critical:** `src/authenticator.ts` exists but is **NOT used**. Endpoints manually validate tokens.
@@ -399,8 +400,8 @@ app.use(dialRouter);
 ## Available API Endpoints
 
 **Authentication:**
-- `POST /api/login/email` - Send email, generate 6-digit code
-- `POST /api/login/code` - Validate code, set JWT cookie
+- `POST /api/login/email` - Send email, generate 6-digit code, set `authCodeCreated` (code valid for 15 minutes)
+- `POST /api/login/code` - Validate code, check expiry (15 min window), set JWT cookie (no code clearing)
 - `POST /api/logout` - Clear JWT cookie
 
 **User & Wallet:**
