@@ -1,3 +1,4 @@
+
 # Phonebooth Workspace - TODO List
 
 ## 🚧 Known Unfinished Features & Technical Debt
@@ -21,7 +22,7 @@
 **Files Modified:**
 - `phonebooth/src/pages/call.tsx` - Added timeout ref, cleanup, and cancellation handling
 
-#### 🔐 Hardcoded JWT Secret (Critical)
+#### 🔒 Hardcoded JWT Secret (Critical)
 **Solution:** Created `phoneserver/src/config.ts` to load JWT secret from `.env` file. Updated all files using JWT to import from config. Added `.env.example` template and updated `.gitignore`.
 **Files Modified:** 
 - `phoneserver/src/config.ts` (created)
@@ -55,6 +56,12 @@
 - Alert user when encountering TODO comments in code that aren't documented here
 - Suggest removal of completed TODOs when verifying functionality
 - Add new entries when creating temporary/incomplete implementations
+
+**Documentation System:**
+- **Workspace-level agent instructions:** `.github/copilot-instructions.md`
+- **Project-level agent instructions:** `phonebooth/.github/copilot-instructions.md`, `phoneserver/.github/copilot-instructions.md`
+- **README files:** `README.md`, `phonebooth/README.md`, `phoneserver/README.md`
+- **System meta:** `AGENT_SYSTEM.md`
 
 **Priority Levels:**
 - **Critical** - Security issues, data loss risks

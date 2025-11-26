@@ -1,22 +1,69 @@
-# Phonebooth Workspace - AI Coding Agent Instructions
 
-## 📚 Documentation Hierarchy
 
-**This workspace has multiple documentation sources:**
+# Phonebooth Workspace – AI Coding Agent Instructions
 
-1. **README files** (quick reference for developers):
-   - `README.md` - Workspace overview, setup, architecture
-   - `phonebooth/README.md` - Frontend tech stack, API integration, patterns
-   - `phoneserver/README.md` - Backend API endpoints, database schema, query patterns
+## Documentation Hierarchy
 
-2. **Instruction files** (detailed AI agent guidance):
-   - This file - High-level monorepo architecture and workflows
-   - `phonebooth/.github/copilot-instructions.md` - Frontend-specific patterns
-   - `phoneserver/.github/copilot-instructions.md` - Backend-specific patterns
+- **Workspace-level agent instructions:** This file (`.github/copilot-instructions.md`) – architecture, workflows, cross-project impact
+- **Project-level agent instructions:** `phonebooth/.github/copilot-instructions.md`, `phoneserver/.github/copilot-instructions.md`
+- **TODO tracking:** `TODO.md` (root, all unfinished features and technical debt)
+- **README files:** `README.md`, `phonebooth/README.md`, `phoneserver/README.md`
+- **System meta:** `AGENT_SYSTEM.md` (AI agent behavior, documentation system)
 
-3. **TODO tracking** (`TODO.md` in workspace root):
-   - Centralized list of unfinished features and technical debt
-   - AI agents MUST actively maintain this file (see TODO Management section below)
+**Always update all relevant documentation when making architectural changes, adding features, or completing TODOs.**
+
+## Big Picture Architecture
+
+- **Monorepo:** Two tightly coupled apps:
+   - `phonebooth/` – React 19 frontend (port 3000)
+   - `phoneserver/` – Express.js REST API (port 8080, in-memory SQLite)
+- **Data flow:** Frontend SWR → API endpoint → Kysely query → Database → JSON response
+- **Type sync:** Frontend types (`src/api/types.tsx`) must match backend DB schema (`src/db/index.ts`)
+- **Separate Git repos:** Commit/push independently per project
+
+## Critical Developer Workflows
+
+- **Auto-start dev servers:** Both start via VS Code tasks (`npm run dev` in each project)
+- **Verify changes:** Check both "Frontend Dev" and "Backend Dev" terminals for errors after edits
+- **Biome formatting:** Auto-format on save (not ESLint/Prettier)
+- **Proxy:** Frontend API calls to `/api/*` route to backend (no CORS needed)
+- **Ephemeral DB:** Backend data lost on restart; test data auto-inserted on startup
+
+## Project-Specific Patterns
+
+- **Frontend:**
+   - All API calls use SWR + shared `fetcher` (`src/api/fetcher.tsx`)
+   - Pages/components wrap content in `<Body>` (`src/components/body/body.tsx`)
+   - React imported as lowercase (`import react from "react"`)
+   - State-driven UI (see `src/pages/call.tsx` for call lifecycle)
+   - Types centralized in `src/api/types.tsx`
+- **Backend:**
+   - Endpoints in `src/endpoints/`, always filter by `owner` (user isolation)
+   - Manual JWT validation via `req.cookies.jwt` (no centralized middleware)
+   - Kysely for all DB queries (never raw SQL)
+   - ES modules: import with `.js` extension even for `.ts` files
+   - No `tsconfig.json` (tsx handles compilation)
+
+## Integration Points
+
+- **API endpoints:** See list in this file; most require JWT in cookies and filter by user
+- **Adding features:** Always update both frontend and backend, sync types, and test end-to-end
+- **TODO management:** Update `TODO.md` for all unfinished features, code comments, and technical debt
+
+## Common Pitfalls
+
+- Backend DB is ephemeral (data lost on restart)
+- JWT secret is hardcoded (not production-ready)
+- No centralized auth middleware (manual checks)
+- Import extensions required for backend
+- Proxy config is automatic (Rsbuild)
+
+## Example: Adding a New Feature
+
+1. **Backend:** Create endpoint in `src/endpoints/`, update DB schema/types if needed, register router in `src/main.ts`
+2. **Frontend:** Add types to `src/api/types.tsx`, create SWR-based component/page, update routes
+3. **Test:** Check both dev terminals, verify API flow in browser
+4. **Document:** Update `TODO.md` if incomplete, sync documentation if architecture changes
 
 4. **System architecture** (`AGENT_SYSTEM.md` in workspace root):
    - Meta-documentation explaining how this documentation system works

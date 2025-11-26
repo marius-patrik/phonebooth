@@ -133,61 +133,100 @@ git push
 ### Frontend (`phonebooth/`)
 - **Framework:** React 19
 - **Build Tool:** Rsbuild
-- **Styling:** Tailwind CSS 4
-- **Routing:** Wouter
-- **Data Fetching:** SWR
-- **Language:** TypeScript
 
-### Backend (`phoneserver/`)
-- **Framework:** Express.js
-- **Database:** SQLite (in-memory)
-- **Query Builder:** Kysely
-- **Auth:** JWT (HTTP-only cookies)
-- **Runtime:** tsx (TypeScript execution)
-- **Language:** TypeScript
+# Phonebooth Workspace
 
-## Available Routes
+A modern VoIP phone application built with React and Express, configured as a VS Code monorepo workspace for seamless full-stack development.
 
-- `/` - Home page with pricing rates
-- `/dial` - Phone number input with dial pad
-- `/call/:phone` - Active call interface
-- `/history` - Call history
-- `/wallet` - Account balance and management
-- `/transactions` - Transaction history
-- `/login` - Email + code authentication
+## Overview
 
-## API Endpoints
+This workspace contains two tightly coupled applications:
+- **phonebooth/** – React 19 frontend with Tailwind CSS 4
+- **phoneserver/** – Express.js REST API with SQLite database
 
-See individual project README files for detailed API documentation:
-- [Frontend README](phonebooth/README.md)
-- [Backend README](phoneserver/README.md)
+Both projects auto-start when you open the workspace, with hot-reloading enabled for rapid development.
 
-### Authentication Code Expiry
-The backend login endpoint now uses the `authCodeCreated` timestamp to enforce a 15-minute expiry window for authentication codes. Codes are not cleared after use; instead, expiry is checked on login. See backend README for details.
+## Documentation System
 
-## Troubleshooting
+This workspace uses a multi-tier documentation system for both developers and AI coding agents:
 
-**Servers won't start:**
-- Run `npm install` in both `phonebooth/` and `phoneserver/`
-- Check for port conflicts (3000, 8080)
+- **Workspace-level agent instructions:** `.github/copilot-instructions.md` (architecture, workflows, cross-project impact)
+- **Project-level agent instructions:** `phonebooth/.github/copilot-instructions.md` (frontend patterns), `phoneserver/.github/copilot-instructions.md` (backend patterns)
+- **TODO tracking:** `TODO.md` (root, all unfinished features and technical debt)
+- **System meta:** `AGENT_SYSTEM.md` (AI agent behavior, documentation hierarchy)
 
-**Type errors in frontend:**
-- Ensure `phonebooth/src/api/types.tsx` matches backend schema in `phoneserver/src/db/index.ts`
+**Always update all relevant documentation when making architectural changes, adding features, or completing TODOs.**
 
-**Database empty after restart:**
-- Backend uses in-memory SQLite - data is ephemeral by design
-- Test data is inserted automatically on startup
+## Quick Setup
 
-## Contributing
+### Automated Setup (Recommended)
 
-See `.github/copilot-instructions.md` for detailed development guidelines and conventions.
+**Windows (PowerShell):**
+```powershell
+git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
+cd phonebooth-workspace
+.\setup-workspace.ps1
+code phonebooth.code-workspace
+```
 
-## Repositories
+**macOS/Linux (Bash):**
+```bash
+git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
+cd phonebooth-workspace
+chmod +x setup-workspace.sh
+./setup-workspace.sh
+code phonebooth.code-workspace
+```
 
-- **Workspace:** https://github.com/pastiiiiiiik/phonebooth-workspace
-- **Frontend:** https://github.com/pastiiiiiiik/phonebooth
-- **Backend:** https://github.com/pastiiiiiiik/phoneserver
+### Manual Setup
 
-## License
+1. **Clone the workspace with submodules:**
+   ```bash
+   git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
+   cd phonebooth-workspace
+   ```
 
-MIT
+2. **Install dependencies:**
+   ```bash
+   cd phonebooth && npm install && cd ..
+   cd phoneserver && npm install && cd ..
+   ```
+
+3. **Open workspace:**
+   ```bash
+   code phonebooth.code-workspace
+   ```
+
+Both dev servers start automatically when the workspace opens.
+
+## Features
+
+- ⚡ **Auto-start dev servers** - Frontend (port 3000) and backend (port 8080) start automatically
+- 🔄 **Hot reloading** - Changes reflect instantly in both projects
+- 📂 **Separate Git repos** - Independent version control for frontend and backend
+- 🎨 **Biome formatting** - Auto-format on save across the workspace
+- 🔍 **TypeScript IntelliSense** - Full type checking and autocomplete
+
+## Architecture
+
+```
+phonebooth-workspace/
+├── .github/
+│   └── copilot-instructions.md    # Workspace-level agent instructions
+├── phonebooth/                     # Frontend (React + Rsbuild)
+│   ├── .github/copilot-instructions.md # Frontend agent instructions
+│   ├── src/
+│   │   ├── pages/                  # Route components
+│   │   ├── components/             # Reusable UI components
+│   │   └── api/                    # Type definitions & data fetching
+│   └── package.json
+├── phoneserver/                    # Backend (Express + SQLite)
+│   ├── .github/copilot-instructions.md # Backend agent instructions
+│   ├── src/
+│   │   ├── endpoints/              # API routes
+│   │   ├── db/                     # Database schema & migrations
+│   │   └── main.ts                 # Server entry point
+│   └── package.json
+├── TODO.md                         # Centralized TODO tracking
+├── AGENT_SYSTEM.md                 # System meta-documentation
+```
