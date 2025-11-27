@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@biomejs/biome": "^2.3.7"
+  },
+  "dependencies": {
+    "@rsbuild/plugin-basic-ssl": "^1.2.1"
   }
 }
