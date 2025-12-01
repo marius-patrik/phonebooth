@@ -1,4 +1,5 @@
 node_modules/
+.cursorrules
 dist/
 .DS_Store
 *.log
