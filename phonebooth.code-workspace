@@ -21,7 +21,7 @@
 			"**/dist/**": true
 		},
 		"task.autoDetect": "off",
-		"cSpell.words": ["Kysely"]
+		"cSpell.words": ["handleback", "Kysely"]
 	},
 	"extensions": {
 		"recommendations": ["biomejs.biome", "bradlc.vscode-tailwindcss"]
