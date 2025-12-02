@@ -1,4 +1,4 @@
-# 📞 Phonebooth Workspace
+# 📞 Phonebooth
 
 A modern VoIP calling application built as a monorepo with a React frontend and Express.js backend.
 
