@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@layer base {
+	html,
+	body {
+		@apply 
+		font-stretch-105% text-lg 
+		bg-white  text-black 
+		dark:bg-black dark:text-white;
+	}
+}
+
+@layer components {
+	.style-accent {
+		@apply 
+		font-semibold text-sky-400 ;
+	}
+
+	.style-floating {
+		@apply 
+		text-zinc-600 text-lg font-normal dark:text-zinc-400;
+	}
+
+	.style-glass {
+		@apply 
+		border 
+		bg-zinc-100/60 border-zinc-200/60 
+		shadow-lg backdrop-blur-xs rounded-full hover:scale-101 active:scale-101 transition-transform p-2 
+		dark:bg-zinc-800/60 dark:border-zinc-600/60 
+		hover:bg-zinc-700/60 active:bg-zinc-600/60;
+	}
+
+	.style-glass-highlight {
+		@apply 
+		border 
+		bg-zinc-100/60 border-zinc-200/60 
+		shadow-lg backdrop-blur-xs rounded-full hover:scale-101 active:scale-101 transition-transform p-2 
+		dark:bg-sky-400/60 dark:border-sky-500/60 
+		hover:border-zinc-500/60 active:border-zinc-200/60 hover:bg-zinc-500/60 active:bg-zinc-500/60;
+	}
+
+	.style-link {
+		@apply 
+		hover:text-black active:text-black 
+		dark:hover:text-white dark:active:text-white
+		text-sky-300 
+		dark:text-sky-300;
+	}
+
+	.style-title {
+		@apply 
+		text-black text-lg font-medium dark:text-white;
+	}
+
+	.style-title-center {
+		@apply 
+		text-black text-center text-lg mx-auto font-medium dark:text-white;
+	}
+
+	.style-description {
+		@apply 
+		text-zinc-600 text-base font-normal dark:text-zinc-400;
+	}
+}

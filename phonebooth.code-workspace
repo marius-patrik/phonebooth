@@ -1,70 +1,7 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"git.enabled": true,
-		"git.autoRepositoryDetection": true,
-		"git.detectSubmodules": true,
-		"typescript.tsdk": "phonebooth/node_modules/typescript/lib",
-		"typescript.enablePromptUseWorkspaceTsdk": true,
-		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "biomejs.biome",
-		"search.exclude": {
-			"**/node_modules": true,
-			"**/dist": true
-		},
-		"files.watcherExclude": {
-			"**/node_modules/**": true,
-			"**/dist/**": true
-		},
-		"task.autoDetect": "off",
-		"cSpell.words": ["handleback", "Kysely"]
-	},
-	"extensions": {
-		"recommendations": ["biomejs.biome", "bradlc.vscode-tailwindcss"]
-	},
-	"tasks": {
-		"version": "2.0.0",
-		"tasks": [
-			{
-				"label": "Frontend Dev",
-				"type": "shell",
-				"command": "npm run dev",
-				"options": {
-					"cwd": "phonebooth"
-				},
-				"isBackground": true,
-				"runOptions": {
-					"runOn": "folderOpen"
-				},
-				"problemMatcher": [],
-				"presentation": {
-					"reveal": "always",
-					"panel": "dedicated",
-					"group": "dev"
-				}
-			},
-			{
-				"label": "Backend Dev",
-				"type": "shell",
-				"command": "npm run dev",
-				"options": {
-					"cwd": "phoneserver"
-				},
-				"isBackground": true,
-				"runOptions": {
-					"runOn": "folderOpen"
-				},
-				"problemMatcher": [],
-				"presentation": {
-					"reveal": "always",
-					"panel": "dedicated",
-					"group": "dev"
-				}
-			}
-		]
-	}
+    "folders": [
+        {
+            "path": "."
+        }
+    ]
 }
