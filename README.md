@@ -1,232 +1,289 @@
-# Phonebooth Workspace
+# 📞 Phonebooth Workspace
 
-A modern VoIP phone application built with React and Express, configured as a VS Code monorepo workspace for seamless full-stack development.
+A modern VoIP calling application built as a monorepo with a React frontend and Express.js backend.
 
-## Overview
-
-This workspace contains two interconnected applications:
-- **phonebooth** - React 19 frontend with Tailwind CSS 4
-- **phoneserver** - Express.js REST API with SQLite database
-
-Both projects auto-start when you open the workspace, with hot-reloading enabled for rapid development.
-
-## Quick Setup
-
-### Automated Setup (Recommended)
-
-**Windows (PowerShell):**
-```powershell
-git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
-cd phonebooth-workspace
-.\setup-workspace.ps1
-code phonebooth.code-workspace
-```
-
-**macOS/Linux (Bash):**
-```bash
-git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
-cd phonebooth-workspace
-chmod +x setup-workspace.sh
-./setup-workspace.sh
-code phonebooth.code-workspace
-```
-
-### Manual Setup
-
-1. **Clone the workspace with submodules:**
-   ```bash
-   git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
-   cd phonebooth-workspace
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   cd phonebooth && npm install && cd ..
-   cd phoneserver && npm install && cd ..
-   ```
-
-3. **Open workspace:**
-   ```bash
-   code phonebooth.code-workspace
-   ```
-
-Both dev servers start automatically when the workspace opens.
-
-## Features
-
-- ⚡ **Auto-start dev servers** - Frontend (port 3000) and backend (port 8080) start automatically
-- 🔄 **Hot reloading** - Changes reflect instantly in both projects
-- 📂 **Separate Git repos** - Independent version control for frontend and backend
-- 🎨 **Biome formatting** - Auto-format on save across the workspace
-- 🔍 **TypeScript IntelliSense** - Full type checking and autocomplete
-
-## Architecture
+## 🏗️ Architecture
 
 ```
 phonebooth-workspace/
-├── .github/
-│   └── copilot-instructions.md    # AI coding agent instructions
-├── phonebooth/                     # Frontend (React + Rsbuild)
-│   ├── src/
-│   │   ├── pages/                  # Route components
-│   │   ├── components/             # Reusable UI components
-│   │   └── api/                    # Type definitions & data fetching
-│   └── package.json
-├── phoneserver/                    # Backend (Express + SQLite)
-│   ├── src/
-│   │   ├── endpoints/              # API routes
-│   │   ├── db/                     # Database schema & migrations
-│   │   └── main.ts                 # Server entry point
-│   └── package.json
-└── phonebooth.code-workspace       # VS Code workspace configuration
+├── client/          # React 19 frontend (Rsbuild + Tailwind CSS 4)
+├── server/          # Express.js REST API (Kysely + SQLite)
+├── package.json     # Root workspace dependencies
+└── phonebooth.code-workspace  # VS Code workspace config
 ```
 
-## Development
+### Tech Stack
 
-### Running the Apps
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | React 19, Rsbuild, Tailwind CSS 4, Wouter, SWR |
+| **Backend** | Express.js, Kysely, SQLite, JWT (HTTP-only cookies) |
+| **Dev Tools** | Biome (linting/formatting), TypeScript |
 
-Both servers auto-start via VS Code tasks. If you need to run them manually:
+### Data Flow
 
-```powershell
-# Frontend (terminal 1)
-cd phonebooth
-npm run dev
-
-# Backend (terminal 2)
-cd phoneserver
-npm run dev
+```
+Frontend (SWR) → Rsbuild Proxy (/api/*) → Backend API → Kysely → SQLite → JSON Response
 ```
 
-**URLs:**
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8080
+---
 
-### Making Changes
+## 🚀 Quick Start
 
-The frontend proxies all `/api/*` requests to the backend, so no CORS configuration is needed.
+### Prerequisites
 
-**When modifying features:**
-1. Check both `phonebooth/` and `phoneserver/` directories
-2. Keep types in sync between `phonebooth/src/api/types.tsx` and `phoneserver/src/db/index.ts`
-3. Verify both terminal outputs after changes
+- Node.js 18+
+- npm or pnpm
 
-### Git Workflow
+### Installation
 
-Each project maintains its own Git repository:
-
-```powershell
-# Commit frontend changes
-cd phonebooth
-git add .
-git commit -m "feat: update UI"
-git push
-
-# Commit backend changes
-cd ../phoneserver
-git add .
-git commit -m "feat: add endpoint"
-git push
-```
-
-## Tech Stack
-
-### Frontend (`phonebooth/`)
-- **Framework:** React 19
-- **Build Tool:** Rsbuild
-
-# Phonebooth Workspace
-
-A modern VoIP phone application built with React and Express, configured as a VS Code monorepo workspace for seamless full-stack development.
-
-## Overview
-
-This workspace contains two tightly coupled applications:
-- **phonebooth/** – React 19 frontend with Tailwind CSS 4
-- **phoneserver/** – Express.js REST API with SQLite database
-
-Both projects auto-start when you open the workspace, with hot-reloading enabled for rapid development.
-
-## Documentation System
-
-This workspace uses a multi-tier documentation system for both developers and AI coding agents:
-
-- **Workspace-level agent instructions:** `.github/copilot-instructions.md` (architecture, workflows, cross-project impact)
-- **Project-level agent instructions:** `phonebooth/.github/copilot-instructions.md` (frontend patterns), `phoneserver/.github/copilot-instructions.md` (backend patterns)
-- **TODO tracking:** `TODO.md` (root, all unfinished features and technical debt)
-- **System meta:** `AGENT_SYSTEM.md` (AI agent behavior, documentation hierarchy)
-
-**Always update all relevant documentation when making architectural changes, adding features, or completing TODOs.**
-
-## Quick Setup
-
-### Automated Setup (Recommended)
-
-**Windows (PowerShell):**
-```powershell
-git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
-cd phonebooth-workspace
-.\setup-workspace.ps1
-code phonebooth.code-workspace
-```
-
-**macOS/Linux (Bash):**
 ```bash
-git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
+# Clone the repository
+git clone <repository-url>
 cd phonebooth-workspace
-chmod +x setup-workspace.sh
-./setup-workspace.sh
-code phonebooth.code-workspace
+
+# Install root dependencies
+npm install
+
+# Install client dependencies
+cd client && npm install && cd ..
+
+# Install server dependencies  
+cd server && npm install && cd ..
 ```
 
-### Manual Setup
+### Development
 
-1. **Clone the workspace with submodules:**
-   ```bash
-   git clone --recurse-submodules https://github.com/pastiiiiiiik/phonebooth-workspace.git
-   cd phonebooth-workspace
-   ```
+**Option 1: VS Code Workspace (Recommended)**
 
-2. **Install dependencies:**
-   ```bash
-   cd phonebooth && npm install && cd ..
-   cd phoneserver && npm install && cd ..
-   ```
+Open `phonebooth.code-workspace` in VS Code/Cursor. Both servers will auto-start via workspace tasks.
 
-3. **Open workspace:**
-   ```bash
-   code phonebooth.code-workspace
-   ```
+**Option 2: Manual**
 
-Both dev servers start automatically when the workspace opens.
+```bash
+# Terminal 1 - Backend (port 8080)
+cd server
+npm run dev
 
-## Features
+# Terminal 2 - Frontend (port 3000)
+cd client
+npm run dev
+```
 
-- ⚡ **Auto-start dev servers** - Frontend (port 3000) and backend (port 8080) start automatically
-- 🔄 **Hot reloading** - Changes reflect instantly in both projects
-- 📂 **Separate Git repos** - Independent version control for frontend and backend
-- 🎨 **Biome formatting** - Auto-format on save across the workspace
-- 🔍 **TypeScript IntelliSense** - Full type checking and autocomplete
+### Access
 
-## Architecture
+- **Frontend:** https://localhost:3000
+- **Backend API:** http://localhost:8080
+
+---
+
+## 📁 Project Structure
+
+### Client (`client/`)
 
 ```
-phonebooth-workspace/
-├── .github/
-│   └── copilot-instructions.md    # Workspace-level agent instructions
-├── phonebooth/                     # Frontend (React + Rsbuild)
-│   ├── .github/copilot-instructions.md # Frontend agent instructions
-│   ├── src/
-│   │   ├── pages/                  # Route components
-│   │   ├── components/             # Reusable UI components
-│   │   └── api/                    # Type definitions & data fetching
-│   └── package.json
-├── phoneserver/                    # Backend (Express + SQLite)
-│   ├── .github/copilot-instructions.md # Backend agent instructions
-│   ├── src/
-│   │   ├── endpoints/              # API routes
-│   │   ├── db/                     # Database schema & migrations
-│   │   └── main.ts                 # Server entry point
-│   └── package.json
-├── TODO.md                         # Centralized TODO tracking
-├── AGENT_SYSTEM.md                 # System meta-documentation
+src/
+├── api/
+│   ├── fetcher.tsx     # SWR fetch wrapper
+│   └── types.tsx       # TypeScript interfaces (must match backend)
+├── components/
+│   ├── body/           # Layout wrappers (header, footer)
+│   ├── call/           # Call state components (ring, active, finished)
+│   ├── cards/          # Data display cards
+│   ├── dial/           # Dial pad UI
+│   ├── display/        # UI primitives (box, line, spacer)
+│   └── input/          # Interactive elements (buttons, links, inputs)
+├── functions/
+│   └── formatter.ts    # Utility functions
+├── hooks/
+│   ├── auth-handler.tsx    # Auth state management
+│   └── logout-handler.tsx  # Logout logic
+├── pages/
+│   ├── private/        # Protected routes
+│   │   ├── dial.tsx         # Dial pad
+│   │   ├── call.tsx         # Active call
+│   │   ├── account.tsx      # Account & deposit
+│   │   ├── history.tsx      # Call history
+│   │   └── contacts/        # Contact management
+│   └── public/         # Public routes
+│       ├── rates.tsx        # Landing page / rates
+│       ├── auth.tsx         # Login / register
+│       ├── loading.tsx      # Loading state
+│       └── error.tsx        # Error page
+├── global.css          # Global styles
+└── index.tsx           # App entry point
 ```
+
+### Server (`server/`)
+
+```
+src/
+├── config.ts           # Environment configuration
+├── db/
+│   ├── index.ts        # Database schema (Kysely)
+│   ├── migrations/     # Database migrations
+│   └── migrator.ts     # Migration runner
+├── endpoints/
+│   ├── user/           # User endpoints (auth, email, logout, user)
+│   ├── calls.ts        # Call history
+│   ├── contacts.ts     # Contact management
+│   ├── deposit.ts      # Balance/deposit
+│   ├── dial.ts         # Call operations (ring, connect, hang)
+│   ├── rates.ts        # Rate information
+│   └── transactions.ts # Transaction history
+├── services/
+│   ├── authenticator.ts    # JWT middleware
+│   ├── billing-manager.ts  # Call billing service
+│   ├── emailer.ts          # Email service
+│   └── tokenizer.ts        # JWT utilities
+└── main.ts             # Server entry point
+```
+
+---
+
+## 📡 API Endpoints
+
+### Public (No Authentication)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/user/email` | Send auth code to email |
+| `POST` | `/api/user/auth` | Validate code, set JWT cookie |
+| `GET` | `/api/rates` | Get calling rates |
+
+### Protected (Requires JWT)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/user` | Get user info |
+| `POST` | `/api/user/deposit` | Add funds |
+| `POST` | `/api/user/logout` | Clear JWT cookie |
+| `GET` | `/api/calls` | Get call history |
+| `POST` | `/api/call/ring` | Initiate call |
+| `POST` | `/api/call/connect` | Connect call |
+| `POST` | `/api/call/hang` | End call |
+| `POST` | `/api/call/complete` | Complete call |
+| `GET` | `/api/call/status/:callId` | Get call status |
+| `GET` | `/api/transactions` | Get transactions |
+| `GET` | `/api/contacts` | Get contacts |
+| `POST` | `/api/contacts` | Add contact |
+| `DELETE` | `/api/contacts/:id` | Delete contact |
+
+---
+
+## 🔐 Authentication
+
+The app uses **email-based passwordless authentication**:
+
+1. User submits email → receives 6-digit code (15 min expiry)
+2. User submits code → receives JWT in HTTP-only cookie
+3. All protected routes require valid JWT
+
+**Important:** JWT is stored in HTTP-only cookies, NOT Authorization headers.
+
+---
+
+## 🗄️ Database
+
+### Schema
+
+| Table | Description |
+|-------|-------------|
+| `user` | User accounts (balance, email, callerId) |
+| `call` | Call records (status, duration, price) |
+| `rate` | Country calling rates |
+| `transaction` | Financial history |
+| `contact` | User contacts |
+
+### Configuration
+
+Set `DATABASE_PATH` environment variable:
+
+```bash
+# In-memory (default) - data lost on restart
+DATABASE_PATH=:memory:
+
+# Persistent file
+DATABASE_PATH=./data/phonebooth.db
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the `server/` directory:
+
+```env
+# JWT Configuration
+JWT_SECRET=your-secure-secret-key
+
+# Database
+DATABASE_PATH=:memory:
+
+# Email (SMTP)
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your-email@example.com
+SMTP_PASS=your-password
+```
+
+---
+
+## 🧪 Test Data
+
+On startup, the server inserts test data:
+
+**Users:**
+- `user1@example.com` - Balance: $100.50 USD
+- `user2@example.com` - Balance: €200.00 EUR
+
+**Rates:**
+- USA (+1): $0.05/min
+- Germany (+49): $0.10/min
+
+---
+
+## 🛣️ Routes (Frontend)
+
+| Path | Page | Auth Required |
+|------|------|---------------|
+| `/` | Rates (Landing) | No |
+| `/rates` | Rates | No |
+| `/auth` | Login/Register | No |
+| `/dial` | Dial Pad | Yes |
+| `/call/:countryCode/:calleeID` | Active Call | Yes |
+| `/account` | Account & Deposit | Yes |
+| `/history` | Call History | Yes |
+| `/contacts` | Contact List | Yes |
+| `/contacts/:id` | Contact Detail | Yes |
+
+---
+
+## 🔧 Development Notes
+
+### Type Synchronization
+
+Frontend types in `client/src/api/types.tsx` **must match** backend schema in `server/src/db/index.ts`.
+
+### API Proxy
+
+The Rsbuild dev server proxies `/api/*` requests to `http://localhost:8080`.
+
+### Module System
+
+Backend uses ES modules with `.js` extensions in imports (even for `.ts` files):
+
+```typescript
+import { db } from "./db/index.js";  // Note: .js extension
+```
+
+---
+
+## 📝 License
+
+MIT
+
+---
+
+**Last Updated:** 2025-12-02
+

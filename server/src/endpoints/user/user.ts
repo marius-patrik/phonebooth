@@ -1,13 +1,13 @@
 import express from "express";
 import { db } from "../../db/index.js";
+import { tokenizer } from "../../services/tokenizer.js";
 
 const router = express.Router();
 
 router.get("/api/user", async (req, res) => {
 	try {
 		// Extract user ID from JWT cookie
-		const { getUserIdFromToken } = await import("../../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = await tokenizer(req.cookies.jwt);
 
 		// Fetch the user from the database using the user ID
 		const user = await db

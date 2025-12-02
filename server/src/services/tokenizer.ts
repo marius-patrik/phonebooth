@@ -1,4 +1,4 @@
-export const getUserIdFromToken = (token: string | undefined): number => {
+export const tokenizer = (token: string | undefined): number => {
 	if (!token) {
 		throw new Error("Token is missing");
 	}

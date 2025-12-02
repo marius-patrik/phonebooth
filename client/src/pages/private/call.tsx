@@ -5,6 +5,7 @@ import PostCallComp from "../../components/call/call-finished";
 import CallActive from "../../components/call/call-active";
 import RingComp from "../../components/call/call-ring";
 import { fetcher } from "../../api/fetcher";
+import React from "react";
 
 type CallState = "ringing" | "connected" | "hanging";
 

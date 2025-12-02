@@ -6,7 +6,7 @@
 			"type": "shell",
 			"command": "npm run dev",
 			"options": {
-				"cwd": "${workspaceFolder}/phonebooth"
+				"cwd": "${workspaceFolder}/client"
 			},
 			"isBackground": true,
 			"runOptions": {
@@ -24,7 +24,7 @@
 			"type": "shell",
 			"command": "npm run dev",
 			"options": {
-				"cwd": "${workspaceFolder}/phoneserver"
+				"cwd": "${workspaceFolder}/server"
 			},
 			"isBackground": true,
 			"runOptions": {

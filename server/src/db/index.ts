@@ -1,5 +1,5 @@
-import Database from "better-sqlite3";
-import { type Generated, Kysely, SqliteDialect } from "kysely";
+import { type Generated, Kysely } from "kysely";
+import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { config } from "../config.js";
 
 interface DatabaseSchema {
@@ -58,9 +58,15 @@ interface DatabaseSchema {
 }
 
 // Create the Kysely instance with the schema
+// libsql uses file: prefix for local files, or :memory: for in-memory
+const dbUrl =
+	config.databasePath === ":memory:"
+		? "file::memory:"
+		: `file:${config.databasePath}`;
+
 export const db = new Kysely<DatabaseSchema>({
-	dialect: new SqliteDialect({
-		database: new Database(config.databasePath),
+	dialect: new LibsqlDialect({
+		url: dbUrl,
 	}),
 });
 

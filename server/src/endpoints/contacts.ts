@@ -2,14 +2,14 @@
 import express from "express";
 import { db } from "../db/index.js";
 // ...existing code...
+import { tokenizer } from "../services/tokenizer.js";
 
 const router = express.Router();
 
 // Get all contacts for the logged-in user
 router.get("/api/contacts", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = await tokenizer(req.cookies.jwt);
 
 		const contacts = await db
 			.selectFrom("contact")
@@ -28,8 +28,7 @@ router.get("/api/contacts", async (req, res) => {
 // Add a new contact
 router.post("/api/contacts", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = await tokenizer(req.cookies.jwt);
 		const { name, countryCode, calleeID } = req.body;
 
 		if (!name || !countryCode || !calleeID) {
@@ -69,8 +68,7 @@ router.post("/api/contacts", async (req, res) => {
 // Delete a contact
 router.delete("/api/contacts/:id", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = await tokenizer(req.cookies.jwt);
 		const contactId = Number(req.params.id);
 
 		if (Number.isNaN(contactId)) {

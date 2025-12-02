@@ -1,6 +1,7 @@
 import express from "express";
 import Stripe from "stripe";
 import { db } from "../db/index.js";
+import { tokenizer } from "../services/tokenizer.js";
 
 // Load Stripe secret key from environment variable
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {});
@@ -9,8 +10,7 @@ const router = express.Router();
 
 router.post("/api/user/deposit", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = tokenizer(req.cookies.jwt);
 		const { balance } = req.body;
 
 		// Validate and convert balance to a number

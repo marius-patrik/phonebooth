@@ -1,4 +1,5 @@
 import express from "express";
+import { tokenizer } from "../services/tokenizer.js";
 
 const router = express.Router();
 
@@ -94,8 +95,7 @@ export async function endCall(
 // POST /api/call/ring - Initiate a call
 router.post("/api/call/ring", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = tokenizer(req.cookies.jwt);
 		const { countryCode, calleeID } = req.body;
 
 		if (!countryCode || !calleeID) {
@@ -159,8 +159,7 @@ router.post("/api/call/ring", async (req, res) => {
 // POST /api/call/connect - Answer/connect a call
 router.post("/api/call/connect", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = tokenizer(req.cookies.jwt);
 		const { callId } = req.body;
 
 		if (!callId) {
@@ -207,8 +206,7 @@ router.post("/api/call/connect", async (req, res) => {
 // POST /api/call/hang - End a call
 router.post("/api/call/hang", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = tokenizer(req.cookies.jwt);
 		const { callId } = req.body;
 
 		if (!callId) {
@@ -247,8 +245,7 @@ router.post("/api/call/hang", async (req, res) => {
 // POST /api/call/complete - Mark call as completed (hanging -> over)
 router.post("/api/call/complete", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = tokenizer(req.cookies.jwt);
 		const { callId } = req.body;
 
 		if (!callId) {
@@ -312,8 +309,7 @@ router.post("/api/call/complete", async (req, res) => {
 // GET /api/call/status/:callId - Get the status of a call
 router.get("/api/call/status/:callId", async (req, res) => {
 	try {
-		const { getUserIdFromToken } = await import("../functions/tokenizer.js");
-		const userId = getUserIdFromToken(req.cookies.jwt);
+		const userId = tokenizer(req.cookies.jwt);
 		const { callId } = req.params;
 
 		const callIdNum = Number(callId);

@@ -10,4 +10,19 @@ export default defineConfig({
 			"/api": "http://localhost:8080",
 		},
 	},
+
+	source: {
+		// Resolve .js imports to .ts/.tsx files
+		alias: {},
+	},
+
+	tools: {
+		rspack: {
+			resolve: {
+				extensionAlias: {
+					".js": [".ts", ".tsx", ".js"],
+				},
+			},
+		},
+	},
 });
