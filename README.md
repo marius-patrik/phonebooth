@@ -40,7 +40,7 @@ Frontend (SWR) → Rsbuild Proxy (/api/*) → Backend API → Kysely → SQLite 
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd phonebooth-workspace
+cd phonebooth
 
 # Install root dependencies
 npm install
