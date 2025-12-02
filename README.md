@@ -5,7 +5,7 @@ A modern VoIP calling application built as a monorepo with a React frontend and 
 ## 🏗️ Architecture
 
 ```
-phonebooth-workspace/
+phonebooth/
 ├── client/          # React 19 frontend (Rsbuild + Tailwind CSS 4)
 ├── server/          # Express.js REST API (Kysely + SQLite)
 ├── package.json     # Root workspace dependencies
