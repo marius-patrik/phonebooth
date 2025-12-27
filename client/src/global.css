@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "liqid-components/styles.css";
 
 @layer base {
   html,
