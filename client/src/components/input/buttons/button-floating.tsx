@@ -1,16 +1,16 @@
-import type { FC, PropsWithChildren } from "react";
-import LinkStyle from "../links/link-style";
+import type { FC, PropsWithChildren } from 'react';
+import LinkStyle from '../links/link-style';
 
 interface ButtonFloatingProps {
-	href: string;
-	buttontext: string;
+  href: string;
+  buttontext: string;
 }
 
 const ButtonFloating: FC<PropsWithChildren<ButtonFloatingProps>> = ({
-	href,
-	buttontext,
+  href,
+  buttontext,
 }) => {
-	return <LinkStyle href={href} buttonText={buttontext} />;
+  return <LinkStyle href={href} buttonText={buttontext} />;
 };
 
 export default ButtonFloating;

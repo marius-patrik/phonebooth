@@ -1,28 +1,28 @@
-import { defineConfig } from "@rsbuild/core";
-import { pluginBasicSsl } from "@rsbuild/plugin-basic-ssl";
-import { pluginReact } from "@rsbuild/plugin-react";
+import { defineConfig } from '@rsbuild/core';
+import { pluginBasicSsl } from '@rsbuild/plugin-basic-ssl';
+import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
-	plugins: [pluginReact(), pluginBasicSsl()],
+  plugins: [pluginReact(), pluginBasicSsl()],
 
-	server: {
-		proxy: {
-			"/api": "http://localhost:8080",
-		},
-	},
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8080',
+    },
+  },
 
-	source: {
-		// Resolve .js imports to .ts/.tsx files
-		alias: {},
-	},
+  source: {
+    // Resolve .js imports to .ts/.tsx files
+    alias: {},
+  },
 
-	tools: {
-		rspack: {
-			resolve: {
-				extensionAlias: {
-					".js": [".ts", ".tsx", ".js"],
-				},
-			},
-		},
-	},
+  tools: {
+    rspack: {
+      resolve: {
+        extensionAlias: {
+          '.js': ['.ts', '.tsx', '.js'],
+        },
+      },
+    },
+  },
 });

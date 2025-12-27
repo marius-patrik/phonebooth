@@ -1,19 +1,18 @@
 {
-	"git.enabled": true,
-	"git.autoRepositoryDetection": true,
-	"typescript.tsdk": "phonebooth/node_modules/typescript/lib",
-	"typescript.enablePromptUseWorkspaceTsdk": true,
-	"editor.formatOnSave": true,
-	"editor.defaultFormatter": "biomejs.biome",
-	"search.exclude": {
-		"**/node_modules": true,
-		"**/dist": true
-	},
-	"files.watcherExclude": {
-		"**/node_modules/**": true,
-		"**/dist/**": true
-	},
-	"task.autoDetect": "off",
-	"cSpell.words": ["handleback", "Kysely"]
+  "git.enabled": true,
+  "git.autoRepositoryDetection": true,
+  "typescript.tsdk": "phonebooth/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true
+  },
+  "task.autoDetect": "off",
+  "cSpell.words": ["handleback", "Kysely"]
 }
-
